@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 function connectDB() {
-    
-mongoose.connect("mongodb+srv://danielbsneto9_db_user:WaO5eCtw4tT0xq1s@cluster0.l1784wx.mongodb.net/Livraria?appName=Cluster0");
+
+mongoose.connect(process.env.MONGO_URI);
 
 return mongoose.connection;
 };
