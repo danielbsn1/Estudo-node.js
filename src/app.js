@@ -1,6 +1,6 @@
 import express from 'express';
 import conectaNaDatabase from './config/dbConnect.js';
-import livros from './models/Livro.js';
+import routes from './Routes/index.js';
 
     const conexao = await conectaNaDatabase();
 
@@ -10,23 +10,8 @@ import livros from './models/Livro.js';
     });
 
 const app = express();
-app.use(express.json());
+routes(app);
 
-
-app.get('/', (req, res) => {
-  res.status(200).send('hello, world');
-});
-
-app.get('/livros', async (req, res) => {
-
-  const listarLivros = await livros.find({});
-  res.status(200).json(listarLivros);
-});
-
-app.post('/livros', (req, res) => {
-  livros.push(req.body);
-  res.status(201).send('Livro adicionado com sucesso' );
-});
 
 app.get('/livros/:id', (req, res) => {
   const livro = buscarLivro(req.params.id);
