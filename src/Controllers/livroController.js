@@ -1,4 +1,5 @@
 import Livro from '../models/Livro.js';
+import {Autor as autor} from '../models/Autor.js';
 
 class LivroController {
  
@@ -26,7 +27,10 @@ class LivroController {
   static async criarLivro(req, res) {
     try {
       const newLivro = new Livro(req.body);
-      res.status(201).json({ message: 'Livro created successfully', livro: newLivro });
+      const autorEncontrado = await autor.findById(newLivro.autor);
+      const livroCompleto = {...newLivro.toObject(),autor: autorEncontrado};
+      const livroCriado = await Livro.create(livroCompleto);
+      res.status(201).json({ message: 'Livro created successfully', livro: livroCriado });
     } catch (error) {
       res.status(400).json({ message: `${error.message} - falha ao criar livro` });
     }
@@ -44,13 +48,23 @@ class LivroController {
     }
   }
 
-  async deleteLivro(req, res) {
+  static async deleteLivro(req, res) {
     try {
       const deletedLivro = await Livro.findByIdAndDelete(req.params.id);
       if (!deletedLivro) {
         return res.status(404).json({ message: 'Livro not found' });
       }
       res.status(200).json({ message: 'Livro deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  static async listarLivrosPorEditora(req, res) {
+    try {
+      const editora = req.query.editora;
+      const livros = await Livro.find({ editora: editora });
+      res.status(200).json(livros);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
