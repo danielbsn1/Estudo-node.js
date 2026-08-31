@@ -13,39 +13,5 @@ const app = express();
 routes(app);
 
 
-app.get('/livros/:id', (req, res) => {
-  const livro = buscarLivro(req.params.id);
-  if (!livro) {
-    return res
-      .status(404)
-      .send('Livro não encontrado');
-  }
-  res.status(200).json(livro);
-});  
-
-app.put('/livros/:id', (req, res) => {
-  const livro = buscarLivro(req.params.id);
-  if (!livro) {
-    return res
-      .status(404)
-      .send('Livro não encontrado');
-  }
-  livro.titulo = req.body.titulo;
-  livro.autor = req.body.autor;
-  res.status(200).send('Livro atualizado com sucesso');
-});
-
-app.delete('/livros/:id', (req, res) => {
-  const livro = buscarLivro(req.params.id);
-  if (!livro) {
-    return res
-      .status(404)
-      .send('Livro não encontrado');
-  }
-  const indice = livros.indexOf(livro);
-  livros.splice(indice, 1);
-  res.status(200).send('Livro excluído com sucesso');
-});
-
 export default app;
 

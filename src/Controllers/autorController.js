@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {Autor as autor} from "../models/Autor.js";
 class AutorController {
   static async listarAutores(req, res) {
@@ -17,7 +18,10 @@ class AutorController {
       }
       res.status(200).json(autorEncontrado);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      if(error instanceof mongoose.Error.CastError) {
+        return res.status(400).json({ message: 'Invalid ID format' });
+      }
+      res.status(500).json({ message: error.message });   
     }
   }
 
